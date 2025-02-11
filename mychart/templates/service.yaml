@@ -1,0 +1,12 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: my-service
+spec:
+  type: {{ .Values.service.type | default "NodePort" }}
+  selector:
+    app: myrelease-app
+  ports:
+  - protocol: TCP
+    port: 80
+    targetPort: 80
