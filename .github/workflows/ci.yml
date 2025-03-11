@@ -20,15 +20,15 @@ jobs:
                                      --tenant ${{ secrets.AZURE_TENANT_ID }}
 
     - name: Login to ACR
-      run: az acr login --name tempvgacr  # Replace with your ACR name (without .azurecr.io)
+      run: az acr login --name tempvgacr
 
     - name: Build Docker Image
       run: |
-        docker build -t tempvgacr.azurecr.io:mywebsite:${{ github.sha }} .
-        docker tag tempvgacr.azurecr.io:mywebsite:${{ github.sha }} tempvgacr.azurecr.io:mywebsite:latest
+        docker build -t tempvgacr.azurecr.io/mywebsite:${{ github.sha }} .
+        docker tag tempvgacr.azurecr.io/mywebsite:${{ github.sha }} tempvgacr.azurecr.io:mywebsite:latest
 
     - name: Push Docker Image with Git SHA tag
-      run: docker push tempvgacr.azurecr.io:mywebsite:${{ github.sha }}
+      run: docker push tempvgacr.azurecr.io/mywebsite:${{ github.sha }}
 
     - name: Push Docker Image with latest tag
-      run: docker push tempvgacr.azurecr.io:mywebsite:latest
+      run: docker push tempvgacr.azurecr.io/mywebsite:latest
