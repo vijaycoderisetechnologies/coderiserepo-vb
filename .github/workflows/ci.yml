@@ -26,7 +26,7 @@ jobs:
     - name: Build Docker Image
       run: |
         docker build -t tempvgacr.azurecr.io/mywebsite:${{ github.sha }} .
-        docker tag tempvgacr.azurecr.io/mywebsite:${{ github.sha }} tempvgacr.azurecr.io:mywebsite:latest
+        docker tag tempvgacr.azurecr.io/mywebsite:${{ github.sha }} tempvgacr.azurecr.io/mywebsite:latest
 
     - name: Push Docker Image with Git SHA tag
       run: docker push tempvgacr.azurecr.io/mywebsite:${{ github.sha }}
