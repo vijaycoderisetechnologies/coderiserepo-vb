@@ -3,17 +3,13 @@
 
 
 define('WP_MEMORY_LIMIT', '1024M');
-define('FORCE_SSL_ADMIN', true);
+define('FORCE_SSL_ADMIN', false);
 
 /* Get Minikube IP dynamically */
-$minikube_ip = trim(shell_exec("minikube ip"));
 
 /* Get NodePort dynamically */
-$wp_port = trim(shell_exec("kubectl get svc wordpress -o=jsonpath='{.spec.ports[0].nodePort}'"));
-
-/* Set WordPress home and site URL */
-define( 'WP_HOME', 'http://' . $minikube_ip . ':' . $wp_port );
-define( 'WP_SITEURL', 'http://' . $minikube_ip . ':' . $wp_port );
+define('WP_HOME', 'http://localhost:8080');
+define('WP_SITEURL', 'http://localhost:8080');
 
 /* Database */
 define('DB_NAME', getenv('WORDPRESS_DB_NAME') ?: 'wordpress_db');
