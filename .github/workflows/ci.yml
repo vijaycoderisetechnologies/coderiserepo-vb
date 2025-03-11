@@ -1,39 +1,34 @@
-
 name: Build and Push Docker Image to ACR
 
 on:
   push:
     branches:
-      - main  # Trigger on push to main branch (change as needed)
+      - main  # Runs on every push to main branch
 
 jobs:
   build-and-push:
     runs-on: ubuntu-latest
 
     steps:
-    - name: Checkout source code
+    - name: Checkout code
       uses: actions/checkout@v3
 
     - name: Log in to Azure
-      uses: azure/login@v1
-      with:
-        client-id: ${{ secrets.AZURE_CLIENT_ID }}
-        tenant-id: ${{ secrets.AZURE_TENANT_ID }}
-        subscription-id: ${{ secrets.AZURE_SUBSCRIPTION_ID }}
-    
-    - name: Azure CLI Login Success
-      run: echo "Logged in to Azure successfully!"
+      run: |
+        az login --service-principal -u ${{ secrets.AZURE_CLIENT_ID }} \
+                                     -p ${{ secrets.AZURE_CLIENT_SECRET }} \
+                                     --tenant ${{ secrets.AZURE_TENANT_ID }}
 
-    - name: Docker Login to ACR
-      run: az acr login --name tempvgacr 
+    - name: Login to ACR
+      run: az acr login --name tempvgacr  # Replace with your ACR name (without .azurecr.io)
 
     - name: Build Docker Image
       run: |
-        docker build -t <ACR-LOGIN-SERVER>/<REPO-NAME>:${{ github.sha }} .
+        docker build -t tempvgacr.azurecr.io:mywebsite:${{ github.sha }} .
         docker tag tempvgacr.azurecr.io:mywebsite:${{ github.sha }} tempvgacr.azurecr.io:mywebsite:latest
 
-    - name: Push Docker Image (Git SHA Tag)
+    - name: Push Docker Image with Git SHA tag
       run: docker push tempvgacr.azurecr.io:mywebsite:${{ github.sha }}
 
-    - name: Push Docker Image (Latest Tag)
+    - name: Push Docker Image with latest tag
       run: docker push tempvgacr.azurecr.io:mywebsite:latest
